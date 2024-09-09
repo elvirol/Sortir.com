@@ -1,0 +1,55 @@
+{%  extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Utilisateurs{% endblock %}
+
+{%  block body %}
+
+    <div class="max-w-4xl lg:max-w-3xl mx-auto bg-white-transparent p-8 rounded-lg shadow-lg mb-3">
+
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-10 text-center">Import de nouveaux utilisateurs</h1>
+
+    <div class="flex justify-center items-center mb-3" >
+        {{ form_start(form, {'action': path('app_user_import', {'token': csrf_token('import')})}) }}
+
+        {{ form_widget(form.csv_file) }}
+
+        <button
+            class="btn btn-primary"
+            href="{{ path('app_user_import', {'token':csrf_token('import')}) }}"
+            onclick="return confirm('Merci de confirmer l\'ajout d\'utilisateur(s) en cliquant sur OK')">Importer
+        </button>
+
+        <div class="flex justify-center items-center bg-red-100 text-red-700 px-4 py-3 rounded relative mx-auto my-2">
+                <span class="block sm:inline">{{ form_errors(form.csv_file) }}</span>
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+    <div class="justify-center items-center mx-auto">
+        {% for type in ['success'] %}
+        {% for message in app.flashes(type) %}
+            <div class="flex justify-center items-center bg-green-300 text-green-800 px-4 py-3 rounded relative  mx-auto">
+                {{ message }}
+                <br>
+            </div>
+
+        {% endfor %}
+        {% endfor %}
+
+        {% for type in ['error'] %}
+
+            {% for message in app.flashes(type) %}
+            <div class="flex justify-center items-center bg-red-100 text-red-700 px-4 py-3 rounded relative mx-auto ">
+                <span class="block sm:inline">
+                    {{ message }}
+                    <br>
+                </span>
+            </div>
+
+        {% endfor %}
+
+    {% endfor %}
+
+    </div>
+    </div>
+{%  endblock %}

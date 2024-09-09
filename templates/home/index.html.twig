@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %}
+    <section class="flex justify-start items-start h-screen p-8 overflow-hidden">
+        <!-- Section Texte -->
+        <div class="flex-1 lg:w-1/2 p-0 lg:pr-12 text-left">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gradient mb-4 leading-tight text-left">
+                Bienvenue sur Sortir.com !
+            </h1>
+{#            <p class="text-lg md:text-xl text-gray-00 mb-4 leading-relaxed">#}
+{#                Cette application a pour but de lister les événements proposés par l'ENI.#}
+{#            </p>#}
+{#            <p class="text-lg md:text-xl text-gray-100 mb-6 leading-relaxed">#}
+{#                Les élèves et le personnel peuvent s'inscrire aux sorties de leur choix.#}
+{#            </p>#}
+            <a href="{{ path('app_activity_list') }}" class="inline-block mt-4 px-8 py-4 bg-blue-700 hover:bg-blue-800 text-white text-lg font-semibold rounded-full shadow-lg transition-all duration-300 ease-in-out">
+                Voir les événements
+            </a>
+        </div>
+
+        <!-- Section Image -->
+    </section>
+{% endblock %}

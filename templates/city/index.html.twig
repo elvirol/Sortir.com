@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Villes{% endblock %}
+
+{% block body %}
+    <h1>Villes</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Code postal</th>
+                <th>Nom</th>
+                <th>Gérer</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for city in cities %}
+            <tr>
+                <td>
+                    <a href="{{ path('app_city_show', {'id': city.id}) }}"><img style="max-height: 30px" src="{{ asset('images/icone-afficher.webp') }}" alt="Afficher"></a>
+                </td>
+                <td>{{ city.postcode }}</td>
+                <td>{{ city.name }}</td>
+                <td>
+                    <a href="{{ path('app_city_edit', {'id': city.id}) }}"><img style="max-height: 30px" src="{{ asset('images/icone-modifier.png') }}" alt="Modifier"></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucune ville trouvée !</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_city_new') }}"><img style="max-height: 5vh" src="{{ asset('images/icon-ajouter.webp') }}" alt="Ajouter ville"></a>
+
+{% endblock %}

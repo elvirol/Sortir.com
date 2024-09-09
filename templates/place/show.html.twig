@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Lieux{% endblock %}
+
+{% block body %}
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-4 text-center">Lieu</h1>
+
+    <div class="flex justify-center">
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ place.name }}</td>
+            </tr>
+            <tr>
+                <th>Rue</th>
+                <td>{{ place.street }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ place.city.postcode ~ ' ' ~ place.city.name }}</td>
+            </tr>
+            <tr hidden>
+                <th>Latitude</th>
+                <td id="latitude">{{ place.latitude }}</td>
+            </tr>
+            <tr hidden>
+                <th>Longitude</th>
+                <td id="longitude">{{ place.longitude }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <div class="flex justify-center">
+        <a class="btn mx-3" href="{{ path('app_place_index') }}">Retour à la liste</a>
+        <a class="btn mx-3" href="{{ path('app_place_edit', {'id': place.id}) }}">Modifier</a>
+    </div>
+    {{ include('/place/_map.html.twig') }}
+
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Sorties{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl lg:max-w-3xl mx-auto bg-white-transparent p-6 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">Annuler la sortie</h1>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ activity.name }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ activity.startingDate ? activity.startingDate|date('d/m/Y H:i') : ''}}</td>
+            </tr>
+            <tr>
+                <th>Site organisateur</th>
+                <td>{{ activity.organizer.campus.name }}</td>
+            </tr>
+            <tr>
+                <th>Lieu</th>
+                <td>{{ activity.place.name ~ ' ' ~ activity.place.city.postcode ~ ' ' ~ activity.place.city.name}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ form_start(form) }}
+
+    {{ form_widget(form) }}
+    <div class="action-links mt-5 flex justify-center">
+        <a href="{{ path('app_activity_list') }}" class="form-button my-3 mr-5 pb-0">Retour à la liste</a>
+        <button class="form-button my-3 mr-5">{{ button_label|default('Confirmer') }}</button>
+    </div>
+
+    {{ form_end(form) }}
+
+</div>
+{% endblock %}
+

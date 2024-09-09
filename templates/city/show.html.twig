@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Villes{% endblock %}
+
+{% block body %}
+    <h1>Ville</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Code postal</th>
+                <td>{{ city.postcode }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ city.name }}</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_city_index') }}">Retour à la liste</a>
+
+    <a href="{{ path('app_city_edit', {'id': city.id}) }}">Modifier</a>
+
+{% endblock %}

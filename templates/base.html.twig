@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sortir.com{% endblock %}</title>
+    <link rel="icon" href="{{asset('/images/favicon.png')}}">
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('nav-toggle') }}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% block headscripts %}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+<header>
+    <nav class="bg-gray-800 p-3 mb-3">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ path('app_home') }}" class="text-white font-bold text-xl">
+                <img src="{{ asset('/images/sortir.png') }}" alt="logo sortir.com" style="max-height: 100px">
+            </a>
+
+
+            <button class="text-white block lg:hidden" id="nav-toggle">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+
+
+            <div class="hidden lg:flex space-x-4">
+                <a href="{{ path('app_home') }}" class="text-gray-300 hover:text-white">Accueil</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_campus_index') }}" class="text-gray-300 hover:text-white">Sites</a>
+                    <a href="{{ path('app_user_list') }}" class="text-gray-300 hover:text-white">Utilisateurs</a>
+                    <a href="{{ path('app_user_import') }}" class="text-gray-300 hover:text-white">Import</a>
+                {% endif %}
+                {% if is_granted('IS_AUTHENTICATED') %}
+                    <a href="{{ path('app_activity_list') }}" class="text-gray-300 hover:text-white">Sorties</a>
+                    <a href="{{ path('app_place_index') }}" class="text-gray-300 hover:text-white">Lieux</a>
+                    <a href="{{ path('app_user_show') }}" class="text-gray-300 hover:text-white">{{ app.user.pseudo ?? 'Mon profil' }}</a>
+                    <a href="{{ path('app_logout') }}" class="text-gray-300 hover:text-white">Se déconnecter</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="text-gray-300 hover:text-white">Se connecter</a>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <div id="nav-content-mobile" class="hidden lg:hidden max-h-0">
+            <a href="{{ path('app_home') }}" class="block text-gray-300 hover:bg-gray-700 hover:text-white py-2 px-4">Accueil</a>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_campus_index') }}"  class="block text-gray-300 hover:bg-gray-700 hover:text-white py-2 px-4">Sites</a>
+                <a href="{{ path('app_user_list') }}"  class="block text-gray-300 hover:bg-gray-700 hover:text-white py-2 px-4">Utilisateurs</a>
+                <a href="{{ path('app_user_import') }}"  class="block text-gray-300 hover:bg-gray-700 hover:text-white py-2 px-4">Import</a>
+            {% endif %}
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <a href="{{ path('app_activity_list') }}" class="block text-gray-300 hover:bg-gray-700 hover:text-white py-2 px-4">Sorties</a>
+                <a href="{{ path('app_user_show') }}" class="block text-gray-300 hover:bg-gray-700 hover:text-white py-2 px-4">{{ app.user.pseudo ?? 'Mon profil' }}</a>
+                <a href="{{ path('app_logout') }}" class="block text-gray-300 hover:bg-gray-700 hover:text-white py-2 px-4">Se déconnecter</a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="block text-gray-300 hover:bg-gray-700 hover:text-white py-2 px-4">Se connecter</a>
+            {% endif %}
+        </div>
+    </nav>
+
+
+</header>
+
+{% block body %}{% endblock %}
+
+        <footer>
+            <p>© ENI 2024 - HD2WM_152 [The best team]</p>
+        </footer>
+    </body>
+</html>

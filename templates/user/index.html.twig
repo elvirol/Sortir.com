@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Utilisateurs{% endblock %}
+
+{% block body %}
+    <section class="bg-custom min-h-screen text-white">
+    <h1 class="text-3xl lg:text-4xl font-extrabold text-gray-800 mb-8">Utilisateurs</h1>
+    <div class="m-5">
+        <a class="inline-block px-8 py-4 bg-blue-700 text-white font-semibold rounded-full shadow hover:bg-blue-800 transition duration-300" href="{{ path('app_register') }}">Créer</a>
+        <a class="inline-block px-8 py-4 bg-blue-700 text-white font-semibold rounded-full shadow hover:bg-blue-800 transition duration-300" href="{{ path('app_user_import') }}">Importer</a>
+    </div>
+    {%  if is_granted('ROLE_ADMIN') %}
+        <div class="flex justify-center">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Pseudo</th>
+                <th>Roles</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Téléphone</th>
+                <th>Email</th>
+                <th>Actif</th>
+                <th>Gérer</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        <a href="{{ path('app_user_profile', {'id': user.id}) }}">
+                            <img style="max-height: 30px" src="{{ asset('images/icone-afficher.webp') }}" alt="Afficher" class="mx-auto">
+                        </a>
+                    </td>
+                    <td>{{ user.pseudo }}</td>
+                    <td>
+                        {% for role in user.roles %}
+                            {{ role[5:] }} <br>
+                        {% endfor %}
+                    </td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.isActive ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <button><a href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a></button>
+                        <button><a href="{{ path('app_user_disable', {'id': user.id, 'token': csrf_token('disable'~user.id)}) }}" onclick="return confirm('Voulez-vous vraiment le désactiver/activer ?')">Activer/Désactiver</a></button>
+                        <button><a href="{{ path('app_user_delete', {'id': user.id, 'token': csrf_token('delete'~user.id)}) }}" onclick="return confirm('Voulez-vous vraiment le supprimer ?')">Supprimer</a></button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        </section>
+    {% endif %}
+{% endblock %}

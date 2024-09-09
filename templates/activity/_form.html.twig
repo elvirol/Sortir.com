@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+
+{{ form_widget(form) }}
+<div class="action-links mt-5 flex justify-center">
+    <a href="{{ path('app_activity_list') }}" class="form-button my-3 mr-5 pb-0">Retour à la liste</a>
+    <button class="form-button my-3 mr-5">{{ button_label|default('Enregistrer') }}</button>
+
+    {% if not activity.id %}
+        <input class="form-button my-3 mr-5" type="submit" formaction="{{ path('app_activity_create', {'autoPublish' : 'true'}) }}" value="Publier">
+    {%  endif %}
+    {% if activity.state.name=='draft' %}
+        <a href="{{ path('app_activity_publish',{'id':activity.id}) }}" class="form-button my-3 mr-5">Publier</a>
+    {% endif %}
+    {% if activity.state.name !='done' %}
+        <a href="{{ path('app_activity_cancel',{'id':activity.id}) }}" class="form-button my-3 mr-5">Supprimer</a>
+    {% endif %}
+</div>
+
+{{ form_end(form) }}

@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Sorties{% endblock %}
+
+{% block body %}
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-4 text-center">Sortie</h1>
+
+    {% if activity.getPhotoUrl() %}
+        <div class="flex justify-center my-5 px-5">
+            <img src="{{ activity.photoUrl }}" alt="profile picture" >
+        </div>
+    {% endif %}
+
+    <div class="flex justify-center">
+
+    <table class="table">
+        <tbody>
+
+            <tr>
+                <th>Nom de la sortie :</th>
+                <td>{{ activity.name }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ activity.state.nameFr }}</td>
+            </tr>
+            <tr>
+                <th>Date et l'heure de la sortie :</th>
+                <td>{{ activity.startingDate ? activity.startingDate|date('d/m/Y H:i') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Date limite d'inscription</th>
+                <td>{{ activity.registrationLimitDate ? activity.registrationLimitDate|date('d/m/Y H:i') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Nombre de places :</th>
+                <td>{{ activity.registrationMaxNb }}</td>
+            </tr>
+            <tr>
+                <th>Durée [heures] :</th>
+                <td>{% if activity.durationHours %}
+                        {{ activity.durationHours }}
+                    {% else %}
+                        <i>Non renseignée</i>
+                    {% endif %}
+                </td>
+            </tr>
+
+
+            <tr>
+                <th>Description et infos :</th>
+                <td>{{ activity.description }}</td>
+            </tr>
+
+            <tr>
+                <th>Lieu :</th>
+                <td>{{ activity.place.name }}</td>
+            </tr>
+
+            <tr>
+                <th>Rue :</th>
+                <td>{{ activity.place.street }}</td>
+            </tr>
+
+            <tr>
+                <th>Ville :</th>
+                <td>{{ activity.place.city.name }}</td>
+            </tr>
+
+            <tr>
+                <th>Code postal :</th>
+                <td>{{ activity.place.city.postcode }}</td>
+            </tr>
+
+            <tr hidden>
+                <th>Latitude :</th>
+                <td id="latitude">{{ activity.place.latitude }}</td>
+            </tr>
+
+            <tr hidden>
+                <th>Longitude :</th>
+                <td id="longitude">{{ activity.place.longitude }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+        <h2 style="text-align: center">Liste des participants inscrits</h2>
+
+        <div class="flex justify-center">
+        <table class="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Pseudo</th>
+                <th>Nom</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for registration in activity.registrations %}
+                <tr>
+                    <td><a href="{{ path('app_user_profile', {'id': registration.user.id}) }}"><img style="max-height: 30px" src="{{ asset('images/icone-afficher.webp') }}" alt="Afficher"></a></td>
+                    <td>{{ registration.user.pseudo }}</td>
+                    <td>{{ registration.user.firstName }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10">Aucun participant pour le moment !</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+
+        <div class="flex justify-center">
+        <a class="btn" href="{{ path('app_activity_list') }}">Retour à la liste</a>
+        </div>
+
+        {% if activity.organizer.id == app.user.id %}
+            <a class="btn" href="{{ path('app_activity_update', {'id': activity.id}) }}">Modifier</a>
+        {% endif %}
+
+        {{ include('/place/_map.html.twig') }}
+
+    </div>
+
+
+{% endblock %}

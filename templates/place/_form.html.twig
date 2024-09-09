@@ -1,0 +1,8 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+<div class="action-links mt-5 flex justify-center">
+    <a href="{{ path('app_place_index') }}" class="form-button my-3 mr-5">Retour à la liste</a>
+    <button class="form-button my-3">{{ button_label|default('Enregistrer') }}</button>
+</div>
+
+{{ form_end(form) }}

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Villes{% endblock %}
+
+{% block body %}
+    <h1>Modifier la ville</h1>
+
+    {{ include('city/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+
+    <a href="{{ path('app_city_index') }}">Retour à la liste</a>
+
+{% endblock %}

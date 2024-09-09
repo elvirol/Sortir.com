@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Sorties{% endblock %}
+
+{% block body %}
+<section class="bg-custom min-h-screen text-black p-8">
+    <h1 class="text-3xl lg:text-4xl font-extrabold text-gray-800 mb-8">Sorties</h1>
+
+    <div class="mb-8 ">
+        <a href="{{ path('app_activity_create') }}" class="inline-block px-8 py-4 bg-blue-700 text-white font-semibold rounded-full shadow hover:bg-blue-800 transition duration-300">Nouvelle sortie</a>
+    </div>
+
+    {% for type in ['success', 'error'] %}
+        {% for message in app.flashes(type) %}
+            <div class="alert alert-{{ type == 'error' ? 'danger' : type }} bg-{{ type == 'error' ? 'red-500' : 'green-500' }} text-white py-2 px-4 rounded mb-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <form action="{{ criteria['withArchives'] ? path('app_activity_list', {'withArchives':'true'}):path('app_activity_list') }}" method="POST" class="space-y-4">
+            <div class="lg:flex lg:space-x-4">
+                <div class="lg:w-1/4">
+                    <label for="campus" class="block text-gray-700">Site</label>
+                    <select name="campus" id="campus" class="w-full mt-1 p-2 border rounded-lg">
+                        <option value="-1"></option>
+                        {% for campus in campusList %}
+                            <option value="{{ campus.id }}">{{ campus.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="lg:w-1/4">
+                    <label for="word" class="block text-gray-700">Mot-clé(s)</label>
+                    <input id="word" type="text" name="word" placeholder="Rechercher par mot-clé" class="w-full mt-1 p-2 border rounded-lg"/>
+                </div>
+                <div class="lg:w-1/2 lg:flex lg:space-x-4">
+                    <div class="lg:w-1/2">
+                        <label for="startingAfter" class="block text-gray-700">Entre</label>
+                        <input type="date" name="startingAfter" class="w-full mt-1 p-2 border rounded-lg"/>
+                    </div>
+                    <div class="lg:w-1/2">
+                        <label for="startingBefore" class="block text-gray-700">et</label>
+                        <input type="date" name="startingBefore" class="w-full mt-1 p-2 border rounded-lg"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:flex lg:space-x-4">
+                <div class="flex items-center">
+                    <input type="checkbox" id="organizer" name="organizer" class="mr-2"/>
+                    <label for="organizer" class="text-gray-700">Organisateur</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="registered" name="registered" class="mr-2"/>
+                    <label for="registered" class="text-gray-700">Participant</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="forthcoming" name="forthcoming" class="mr-2"/>
+                    <label for="forthcoming" class="text-gray-700">À venir</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="ongoing" name="ongoing" class="mr-2"/>
+                    <label for="ongoing" class="text-gray-700">En cours</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="done" name="done" class="mr-2"/>
+                    <label for="done" class="text-gray-700">Terminé</label>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-4">
+                <button type="reset" class="px-4 py-2 bg-gray-400 text-white rounded-lg shadow hover:bg-gray-500 transition duration-300">Effacer</button>
+                <button type="submit" class="px-4 py-2 bg-blue-700 text-white rounded-lg shadow hover:bg-blue-800 transition duration-300">Rechercher</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Résultat(s) de la recherche</h2>
+        <p class="text-gray-700 mb-4">
+            {% if criteria['campus'] %}<span class="mr-8">Campus: {{ criteria['campus'].name }} </span>{% endif %}
+            {% if criteria['word'] %}<span class="mr-8">Nom contient: {{ criteria['word'] }}</span>{% endif %}
+            {% if criteria['startingAfter'] %}<span class="mr-8">Débute après le: {{ criteria['startingAfter']|date('d/m/Y') }}</span>{% endif %}
+            {% if criteria['startingBefore'] %}<span class="mr-8">Débute avant le: {{ criteria['startingBefore']|date('d/m/Y') }}</span>{% endif %}
+            {% if criteria['organizer'] %}<span class="mr-8">Organisateur</span>{% endif %}
+            {% if criteria['registered'] %}<span class="mr-8">Participant</span>{% endif %}
+            {% if criteria['forthcoming'] %}<span class="mr-8">À venir</span>{% endif %}
+            {% if criteria['ongoing'] %}<span class="mr-8">En cours</span>{% endif %}
+            {% if criteria['done'] %}<span class="mr-8">Terminé</span>{% endif %}
+        </p>
+
+        <table class="min-w-full bg-white border rounded-lg shadow-lg ">
+            <thead class="bg-gray-200 text-gray-700">
+            <tr>
+                <th class="py-2 px-4 border-b">Action</th>
+                <th class="py-2 px-4 border-b">Site</th>
+                <th class="py-2 px-4 border-b">Nom</th>
+                <th class="py-2 px-4 border-b">Début</th>
+                <th class="py-2 px-4 border-b">Inscription jusqu'au</th>
+                <th class="py-2 px-4 border-b">Inscrits/places</th>
+                <th class="py-2 px-4 border-b">État</th>
+                <th class="py-2 px-4 border-b">S'inscrire/Se désister</th>
+                <th class="py-2 px-4 border-b">Organisateur</th>
+                <th class="py-2 px-4 border-b">Gérer</th>
+            </tr>
+            </thead>
+            <tbody class="text-gray-700">
+            {% for activity in activities %}
+                {% set isRegistered = activity.registrations|filter(r => r.user.id == app.user.id)|length == 1 %}
+                <tr class="hover:bg-gray-100">
+                    <td class="py-2 px-4 border-b">
+                        <a href="{{ path('app_activity_detail', {'id': activity.id}) }}" title="Afficher">
+                            <img style="max-height: 30px" src="{{ asset('images/icone-afficher.webp') }}" alt="Afficher" class="mx-auto">
+                        </a>
+                    </td>
+                    <td class="py-2 px-4 border-b">{{ activity.organizer.campus.name }}</td>
+                    <td class="py-2 px-4 border-b">{{ activity.name }}</td>
+                    <td class="py-2 px-4 border-b">{{ activity.startingDate ? activity.startingDate|date('d/m/Y H:i') : '' }}</td>
+                    <td class="py-2 px-4 border-b">{{ activity.registrationLimitDate ? activity.registrationLimitDate|date('d/m/Y H:i') : '' }}</td>
+                    <td class="py-2 px-4 border-b">{{ activity.registrations|length ~ '/' ~ activity.registrationMaxNb }}</td>
+                    <td class="py-2 px-4 border-b">{{ activity.state.nameFr }}</td>
+                    <td class="py-2 px-4 border-b">
+                        {% if not isRegistered and activity.state.name == "open" %}
+                            <a href="{{ path('app_activity_signup', {'id': activity.id, 'token': csrf_token('signup' ~ activity.id)}) }}"
+                               title="S'inscrire" onclick="return confirm('Merci de confirmer votre inscription en cliquant sur OK')">
+                                <img style="max-height: 30px" src="{{ asset('images/icone-s\'inscrire.png') }}" alt="S'inscrire" class="mx-auto">
+                            </a>
+                        {% endif %}
+                        {% if isRegistered and (activity.state.name == "open" or activity.state.name == "full") %}
+                            <a href="{{ path('app_activity_unsubscribe', {'id': activity.id, 'token': csrf_token('unsubscribe' ~ activity.id) }) }}"
+                               title="Se désister" onclick="return confirm('Merci de confirmer votre désinscription en cliquant sur OK')">
+                                <img style="max-height: 30px" src="{{ asset('images/icone-se-desister.jpg') }}" alt="Se désister" class="mx-auto">
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td class="py-2 px-4 border-b">
+                        {% if activity.organizer.profileImage %}
+                            <a title="{{ activity.organizer.pseudo }}" href="{{ path('app_user_profile',{'id':activity.organizer.id}) }}">
+                                <img src="/profile/images/{{ activity.organizer.profileImage }}" class="w-10 h-10 rounded" alt="Profil">
+                            </a>
+                        {% else %}
+                            <a class="font-medium text-gray-600 dark:text-gray-300" title="{{ activity.organizer.pseudo }}" href="{{ path('app_user_profile',{'id':activity.organizer.id}) }}">{{ activity.organizer.pseudo }}</a>
+                        {% endif %}
+                    </td>
+                    <td class="py-2 px-4 border-b">
+                        {% if (activity.organizer.id == app.user.id or 'ROLE_ADMIN' in app.user.roles) and activity.state.name != "done" and activity.state.name != "cancelled" %}
+                            <a href="{{ path('app_activity_update', {'id': activity.id}) }}" title="Modifier">
+                                <img style="max-height: 30px" src="{{ asset('images/icone-modifier.png') }}" alt="Modifier" class="mx-auto">
+                            </a>
+                            {% if activity.state.name == "draft" or 'ROLE_ADMIN' in app.user.roles %}
+                                <a href="{{ path('app_activity_publish', {'id': activity.id}) }}" title="Publier"
+                                   onclick="return confirm('Merci de confirmer la publication de la sortie en cliquant sur OK')">
+                                    <img style="max-height: 30px" src="{{ asset('images/icone-publier.webp') }}" alt="Publier" class="mx-auto">
+                                </a>
+                            {% endif %}
+                            <a href="{{ path('app_activity_cancel', {'id': activity.id}) }}" title="Annuler">
+                                <img style="max-height: 30px" src="{{ asset('images/icone-annuler.jpg') }}" alt="Annuler" class="mx-auto">
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10" class="text-center py-4 text-gray-500">Aucune sortie n'a été trouvée !</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-8">
+        {% if not criteria['withArchives'] %}
+            <p class="text-gray-700">Par défaut, les sorties de plus de 30 jours ne sont pas affichées. <br/>
+                Pour afficher toutes les sorties correspondants à la recherche, <a href="{{ path('app_activity_list', {'withArchives':'true'}) }}" class="text-blue-600 hover:underline">cliquer ici</a></p>
+        {% else %}
+            <p class="text-gray-700">Pour retirer les sorties archivées de la recherche, <a href="{{ path('app_activity_list') }}" class="text-blue-600 hover:underline">cliquer ici</a></p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Sorties{% endblock %}
+
+{% block body %}
+
+    <div class="max-w-4xl lg:max-w-3xl mx-auto bg-white-transparent p-6 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">Modifier sortie</h1>
+
+            {{ include('activity/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+
+    </div>
+{% endblock %}
